@@ -33,8 +33,8 @@ $sRet = curl_exec($curl);
 $iCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
 if ($iCode == 410) {
-// 说明设备存在问题
-return;
+    // 说明设备存在问题
+    return;
 }
 
 if ($iCode != 200) {
