@@ -30,10 +30,9 @@ class SureApns
 	 * @param  integer $iExpireTime 过期时间，默认一天
 	 * @return boolean              是否成功
 	 */
-	function pushMsg ($sDevice, $sMsg, $arrContent = array(), $iExpireTime = 86400)
-	{
+	function pushMsg ($sDevice, $sMsg, $arrContent = array(), $iExpireTime = 86400) {
 
-		$iBadge = 1;
+        $iBadge = 1;
 
 		$arrPayload["aps"] = array(
 			'alert'    => $sMsg,
@@ -54,8 +53,7 @@ class SureApns
 		curl_setopt($this->m_curl, CURLOPT_HTTPHEADER, array($this->m_sAppId, "apns-expiration:".$iExpireTime));
 
 		$sRet = curl_exec($this->m_curl);
-
-	    $iCode = curl_getinfo($this->m_curl, CURLINFO_HTTP_CODE);
+        $iCode = curl_getinfo($this->m_curl, CURLINFO_HTTP_CODE);
 
 	    if ($iCode == 410) {
 	    	// 说明设备存在问题
