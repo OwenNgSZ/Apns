@@ -36,7 +36,7 @@ class SureApns
 		$iBadge = 1;
 
         $arrPayload["aps"] = array(
-			'alert'    => $sMsg,
+            'alert'    => $sMsg,
 			'content'  => $arrContent,
 			'badge'    => $iBadge,
 			'sound'    => 'default',
