@@ -30,46 +30,45 @@ class SureApns
 	 * @param  integer $iExpireTime 过期时间，默认一天
 	 * @return boolean              是否成功
 	 */
-	function pushMsg ($sDevice, $sMsg, $arrContent = array(), $iExpireTime = 86400) {
+function pushMsg ($sDevice, $sMsg, $arrContent = array(), $iExpireTime = 86400) {
+    
+	$iBadge = 1;
 
-        
-		$iBadge = 1;
+	$arrPayload["aps"] = array(
+        'alert'    => $sMsg,
+		'content'  => $arrContent,
+		'badge'    => $iBadge,
+		'sound'    => 'default',
+		'content-available' => 1
+	);
 
-        $arrPayload["aps"] = array(
-            'alert'    => $sMsg,
-			'content'  => $arrContent,
-			'badge'    => $iBadge,
-			'sound'    => 'default',
-			'content-available' => 1
-		);
+	// 开发环境
+	$sHttp = "https://api.development.push.apple.com/3/device/".$sDevice;
 
-		// 开发环境
-		$sHttp = "https://api.development.push.apple.com/3/device/".$sDevice;
+	// 生产环境
+	// $sHttp = "https://api.push.apple.com/3/device/".$sDevice;
 
-		// 生产环境
-		// $sHttp = "https://api.push.apple.com/3/device/".$sDevice;
+	curl_setopt($this->m_curl, CURLOPT_URL, $sHttp);
+	curl_setopt($this->m_curl, CURLOPT_POSTFIELDS, json_encode($arrPayload));
+	curl_setopt($this->m_curl, CURLOPT_HTTPHEADER, array($this->m_sAppId, "apns-expiration:".$iExpireTime));
 
-		curl_setopt($this->m_curl, CURLOPT_URL, $sHttp);
-		curl_setopt($this->m_curl, CURLOPT_POSTFIELDS, json_encode($arrPayload));
-		curl_setopt($this->m_curl, CURLOPT_HTTPHEADER, array($this->m_sAppId, "apns-expiration:".$iExpireTime));
+	$sRet = curl_exec($this->m_curl);
+    $iCode = curl_getinfo($this->m_curl, CURLINFO_HTTP_CODE);
 
-		$sRet = curl_exec($this->m_curl);
-        $iCode = curl_getinfo($this->m_curl, CURLINFO_HTTP_CODE);
+    if ($iCode == 410) {
+    	// 说明设备存在问题
+    	SURE_LOG(__FILE__, __LINE__, LP_ERROR, "{$sDevice} 存在问题 -- ".$iCode);
+    	return false;
+    }
 
-	    if ($iCode == 410) {
-	    	// 说明设备存在问题
-	    	SURE_LOG(__FILE__, __LINE__, LP_ERROR, "{$sDevice} 存在问题 -- ".$iCode);
-	    	return false;
-	    }
+    if ($iCode != 200) {
+    	SURE_LOG(__FILE__, __LINE__, LP_ERROR, "{$sHttp} --> {$iCode} --> {$sRet}");
+    	return false;
+    }
 
-	    if ($iCode != 200) {
-	    	SURE_LOG(__FILE__, __LINE__, LP_ERROR, "{$sHttp} --> {$iCode} --> {$sRet}");
-	    	return false;
-	    }
+    return true;
 
-	    return true;
-
-	}
+}
 
 	/**
 	 * 析构函数
