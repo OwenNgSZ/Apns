@@ -38,7 +38,7 @@ if ($iCode == 410) {
 }
 
 if ($iCode != 200) {
-return;
+    return;
 }
 
 curl_close($curl);
