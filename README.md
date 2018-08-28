@@ -30,17 +30,17 @@ class SureApns
 	 * @param  integer $iExpireTime 过期时间，默认一天
 	 * @return boolean              是否成功
 	 */
-function pushMsg ($sDevice, $sMsg, $arrContent = array(), $iExpireTime = 86400) {
+    function pushMsg ($sDevice, $sMsg, $arrContent = array(), $iExpireTime = 86400) {
     
-$iBadge = 1;
+        $iBadge = 1;
 
-$arrPayload["aps"] = array(
-    'alert'    => $sMsg,
-	'content'  => $arrContent,
-	'badge'    => $iBadge,
-	'sound'    => 'default',
-	'content-available' => 1
-);
+        $arrPayload["aps"] = array(
+            'alert'    => $sMsg,
+	        'content'  => $arrContent,
+	        'badge'    => $iBadge,
+	        'sound'    => 'default',
+	        'content-available' => 1
+        );
 
 // 开发环境
 $sHttp = "https://api.development.push.apple.com/3/device/".$sDevice;
