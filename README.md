@@ -32,9 +32,10 @@ class SureApns
 	 */
 	function pushMsg ($sDevice, $sMsg, $arrContent = array(), $iExpireTime = 86400) {
 
-        $iBadge = 1;
+        
+		$iBadge = 1;
 
-		$arrPayload["aps"] = array(
+        $arrPayload["aps"] = array(
 			'alert'    => $sMsg,
 			'content'  => $arrContent,
 			'badge'    => $iBadge,
